@@ -1,8 +1,8 @@
 package com.thejobs.onlineappointmentschedulingwebsite.controller;
 
+import com.thejobs.onlineappointmentschedulingwebsite.dto.CountryDTO;
 import com.thejobs.onlineappointmentschedulingwebsite.dto.ResponseDTO;
-import com.thejobs.onlineappointmentschedulingwebsite.dto.TimeDTO;
-import com.thejobs.onlineappointmentschedulingwebsite.service.TimeService;
+import com.thejobs.onlineappointmentschedulingwebsite.service.CountryService;
 import com.thejobs.onlineappointmentschedulingwebsite.util.VarList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,31 +12,30 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/v1/time")
-public class TimeController {
+@RequestMapping("api/v1/country")
+public class CountryController {
 
     @Autowired
-    private TimeService timeService;
-
+    private CountryService countryService;
     @Autowired
     private ResponseDTO responseDTO;
+    @PostMapping(value = "/saveCountry")
+    public ResponseEntity saveCountry(@RequestBody CountryDTO countryDTO){
 
-    @PostMapping(value = "/saveTime")
-    public ResponseEntity saveTime(@RequestBody TimeDTO timeDTO){
 
         try{
 
-            String res = timeService.saveTime(timeDTO);
+            String res = countryService.saveCountry(countryDTO);
             if (res.equals("00")){
                 responseDTO.setCode(VarList.RSP_SUCCESS);
                 responseDTO.setMessage("Success");
-                responseDTO.setContent(timeDTO);
+                responseDTO.setContent(countryDTO);
                 return new ResponseEntity(responseDTO, HttpStatus.ACCEPTED);
             }
             else if (res.equals("06")){
                 responseDTO.setCode(VarList.RSP_DUPLICATED);
                 responseDTO.setMessage("Already added");
-                responseDTO.setContent(timeDTO);
+                responseDTO.setContent(countryDTO);
                 return new ResponseEntity(responseDTO, HttpStatus.BAD_REQUEST);
             }
             else {
@@ -55,15 +54,15 @@ public class TimeController {
         }
     }
 
-    @GetMapping("/getAllTimes")
-    public ResponseEntity getAllTimes() {
+    @GetMapping("/getAllCountries")
+    public ResponseEntity getAllCountries() {
 
         try {
 
-            List<TimeDTO> timeDTOList = timeService.getAllTimes();
+            List<CountryDTO> countryDTOList = countryService.getAllCountries();
             responseDTO.setCode(VarList.RSP_SUCCESS);
             responseDTO.setMessage("Success");
-            responseDTO.setContent(timeDTOList);
+            responseDTO.setContent(countryDTOList);
             return new ResponseEntity(responseDTO, HttpStatus.ACCEPTED);
 
 
@@ -76,7 +75,5 @@ public class TimeController {
 
         }
     }
-
-
 
 }
