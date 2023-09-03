@@ -8,6 +8,7 @@ import com.thejobs.onlineappointmentschedulingwebsite.entity.Consultant;
 import com.thejobs.onlineappointmentschedulingwebsite.exceptions.AuthenticationFailException;
 import com.thejobs.onlineappointmentschedulingwebsite.exceptions.CustomException;
 import com.thejobs.onlineappointmentschedulingwebsite.repo.ConsultantRepo;
+import com.thejobs.onlineappointmentschedulingwebsite.repo.TokenRepo;
 import com.thejobs.onlineappointmentschedulingwebsite.util.Helper;
 import com.thejobs.onlineappointmentschedulingwebsite.util.VarList;
 import jakarta.transaction.Transactional;
@@ -38,6 +39,9 @@ public class ConsultantService {
 
     @Autowired
     AuthenticationService authenticationService;
+
+    @Autowired
+    TokenRepo tokenRepo;
 
     Logger logger = LoggerFactory.getLogger(ConsultantService.class);
 
@@ -139,6 +143,23 @@ public class ConsultantService {
         String myHash = DatatypeConverter
                 .printHexBinary(digest).toUpperCase();
         return myHash;
+    }
+
+
+    public String deleteConsultant(String id) {
+        Long consultantId = Long.valueOf(id);
+
+        if (consultantRepo.existsById(consultantId)) {
+            // First, delete the associated token
+            authenticationService.deleteTokenByConsultantId(consultantId);
+
+            // Then, delete the consultant
+            consultantRepo.deleteById(consultantId);
+
+            return VarList.RSP_SUCCESS;
+        } else {
+            return VarList.RSP_NO_DATA_FOUND;
+        }
     }
 }
 

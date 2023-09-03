@@ -44,4 +44,15 @@ public class AuthenticationService {
             throw new AuthenticationFailException(VarList.AUTH_TOEKN_NOT_VALID);
         }
     }
+
+    public void deleteTokenByConsultantId(Long consultantId) {
+        // Find the token associated with the consultant ID
+        Optional<AuthenticationToken> tokenOptional = tokenRepo.findByConsultantId(consultantId);
+
+        // Check if a token was found
+        if (tokenOptional.isPresent()) {
+            AuthenticationToken token = tokenOptional.get();
+            tokenRepo.delete(token); // Delete the token
+        }
+    }
 }

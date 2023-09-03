@@ -103,6 +103,29 @@ public class ConsultantController {
         }
     }
 
+    @DeleteMapping("/deleteConsultant/{id}")
+    public ResponseEntity deleteConsultant(@PathVariable String id){
+        try {
+            String res = consultantService.deleteConsultant(id);
+            if (res.equals("00")) {
+                responseDTO.setCode(VarList.RSP_SUCCESS);
+                responseDTO.setMessage("Success");
+                responseDTO.setContent(null);
+                return new ResponseEntity(responseDTO, HttpStatus.ACCEPTED);
+            } else {
+                responseDTO.setCode(VarList.RSP_NO_DATA_FOUND);
+                responseDTO.setMessage("No Product Available For this ID");
+                responseDTO.setContent(null);
+                return new ResponseEntity(responseDTO, HttpStatus.BAD_REQUEST);
+            }
+        } catch (Exception e) {
+            responseDTO.setCode(VarList.RSP_ERROR);
+            responseDTO.setMessage(e.getMessage());
+            responseDTO.setContent(e);
+            return new ResponseEntity(responseDTO, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @PostMapping(value = "/signIn")
     public ResponseEntity signInConsultant(@RequestBody ConsultantDTO consultantDTO) {
 
@@ -110,6 +133,15 @@ public class ConsultantController {
 
 
     }
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout() {
+        // Perform logout actions, such as invalidating the session or clearing tokens
+        // ...
+
+        // Return a response indicating successful logout
+        return ResponseEntity.ok("Logged out successfully");
+    }
+
 
 
 }
