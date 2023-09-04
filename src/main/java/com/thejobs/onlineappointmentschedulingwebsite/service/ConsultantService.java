@@ -22,7 +22,6 @@ import javax.xml.bind.DatatypeConverter;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Optional;
-//import java.util.logging.Logger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,6 +41,8 @@ public class ConsultantService {
 
     @Autowired
     TokenRepo tokenRepo;
+    @Autowired
+     PasswordHasher passwordHasher;
 
     Logger logger = LoggerFactory.getLogger(ConsultantService.class);
 
@@ -56,7 +57,7 @@ public class ConsultantService {
         // first encrypt the password
         String encryptedPassword = consultantDTO.getPassword();
         try {
-            encryptedPassword = hashPassword(consultantDTO.getPassword());
+            encryptedPassword = passwordHasher.hashPassword(consultantDTO.getPassword());
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
             logger.error("hashing password failed {}", e.getMessage());
@@ -92,17 +93,24 @@ public class ConsultantService {
 
     public String updateConsultant(ConsultantDTO consultantDTO) {
         if (consultantRepo.existsById(consultantDTO.getId())) {
+            // Check if a new password is provided
+            if (consultantDTO.getPassword() != null) {
+                try {
+                    String hashedPassword = passwordHasher.hashPassword(consultantDTO.getPassword());
+                    consultantDTO.setPassword(hashedPassword); // Update the DTO with the hashed password
+                } catch (NoSuchAlgorithmException e) {
+                    e.printStackTrace();
+                    logger.error("Hashing password failed: {}", e.getMessage());
+                    return VarList.RSP_ERROR; // Handle the hashing error as needed
+                }
+            }
 
             consultantRepo.save(modelMapper.map(consultantDTO, Consultant.class));
             return VarList.RSP_SUCCESS;
-
         } else {
-
             return VarList.RSP_NO_DATA_FOUND;
         }
     }
-
-
 
     public ConsultantSignInResponseDTO signInConsultant(ConsultantDTO consultantDTO) {
         String email = consultantDTO.getEmail();
@@ -115,7 +123,7 @@ public class ConsultantService {
         }
 
         try {
-            String hashedProvidedPassword = hashPassword(providedPassword);
+            String hashedProvidedPassword = passwordHasher.hashPassword(providedPassword);
             if (!hashedProvidedPassword.equals(consultant.getPassword())) {
                 throw new AuthenticationFailException("Incorrect password");
             }
@@ -136,14 +144,14 @@ public class ConsultantService {
     // ... Rest of the service class
 
 
-    String hashPassword(String password) throws NoSuchAlgorithmException {
-        MessageDigest md = MessageDigest.getInstance("MD5");
-        md.update(password.getBytes());
-        byte[] digest = md.digest();
-        String myHash = DatatypeConverter
-                .printHexBinary(digest).toUpperCase();
-        return myHash;
-    }
+//    String hashPassword(String password) throws NoSuchAlgorithmException {
+//        MessageDigest md = MessageDigest.getInstance("MD5");
+//        md.update(password.getBytes());
+//        byte[] digest = md.digest();
+//        String myHash = DatatypeConverter
+//                .printHexBinary(digest).toUpperCase();
+//        return myHash;
+//    }
 
 
     public String deleteConsultant(String id) {
