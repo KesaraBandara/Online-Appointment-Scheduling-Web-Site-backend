@@ -17,8 +17,11 @@ public class AuthenticationService {
 
     @Autowired
     TokenRepo tokenRepo;
+//    @Autowired
+//    UserTokenRepo userTokenRepo;
 
     public void saveConfirmationToken(AuthenticationToken authenticationToken) {
+
         tokenRepo.save(authenticationToken);
     }
 

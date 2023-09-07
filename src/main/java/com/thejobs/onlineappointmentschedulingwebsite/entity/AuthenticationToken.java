@@ -14,7 +14,7 @@ public class AuthenticationToken {
     @Column(name = "id")
     private Integer id;
 
-
+    @Column  (name = "token", length = 70,nullable = false)
     private String token;
 
     @Column(name = "created_date")
@@ -41,6 +41,9 @@ public class AuthenticationToken {
         this.createdDate = createdDate;
         this.consultant = consultant;
     }
+
+
+
 
     public Integer getId() {
         return id;

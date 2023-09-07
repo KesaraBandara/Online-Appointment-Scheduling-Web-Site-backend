@@ -14,13 +14,13 @@ public class AuthenticationTokenUser {
     @Column(name = "id")
     private Integer id;
 
-
+    @Column  (name = "userToken", length = 70,nullable = false)
     private String userToken;
 
     @Column(name = "created_date")
     private Date createdDate;
 
-    @OneToOne(targetEntity = Consultant.class, fetch = FetchType.EAGER)
+    @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER)
     @JoinColumn(nullable = false, name = "user_id")
     private User user;
 
