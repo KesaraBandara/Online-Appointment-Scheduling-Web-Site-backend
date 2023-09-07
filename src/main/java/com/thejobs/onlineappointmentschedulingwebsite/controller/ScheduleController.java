@@ -2,6 +2,7 @@ package com.thejobs.onlineappointmentschedulingwebsite.controller;
 
 import com.thejobs.onlineappointmentschedulingwebsite.dto.ResponseDTO;
 import com.thejobs.onlineappointmentschedulingwebsite.dto.ScheduleDTO;
+import com.thejobs.onlineappointmentschedulingwebsite.dto.ScheduleSummaryDTO;
 import com.thejobs.onlineappointmentschedulingwebsite.service.ScheduleService;
 import com.thejobs.onlineappointmentschedulingwebsite.util.VarList;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +45,6 @@ public class ScheduleController {
                 return new ResponseEntity(responseDTO, HttpStatus.BAD_REQUEST);
             }
         }
-
         catch (Exception exception){
             responseDTO.setCode(VarList.RSP_ERROR);
             responseDTO.setMessage(exception.getMessage());
@@ -52,13 +52,11 @@ public class ScheduleController {
             return new ResponseEntity(responseDTO, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-    @GetMapping("/getAllScheduleByToken/{token}")
-    public ResponseEntity getAllProductsByID(@PathVariable String token){
-
+    @GetMapping("/getAllScheduleById/{id}")
+    public ResponseEntity getAllProductsByID(@PathVariable String id){
         try {
-            System.out.println(token);
-            List<ScheduleDTO> scheduleDTO = scheduleService.getAllScheduleByToken(token);
+            System.out.println(id);
+            List<ScheduleSummaryDTO> scheduleDTO = scheduleService.getAllScheduleById(id);
             if (scheduleDTO !=null) {
                 responseDTO.setCode(VarList.RSP_SUCCESS);
                 responseDTO.setMessage("Success");
@@ -77,9 +75,7 @@ public class ScheduleController {
             responseDTO.setContent(exception);
             return new ResponseEntity(responseDTO, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
     }
-
     @DeleteMapping("/deleteSchedule/{id}")
     public ResponseEntity deleteSchedule(@PathVariable String id){
         try {
@@ -102,6 +98,46 @@ public class ScheduleController {
             return new ResponseEntity(responseDTO, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    @GetMapping("/getAllSchedule")
+    public ResponseEntity getAllSchedule() {
 
+        try {
+            List<ScheduleSummaryDTO> scheduleDTOList = scheduleService.getAllSchedule();
+            responseDTO.setCode(VarList.RSP_SUCCESS);
+            responseDTO.setMessage("Success");
+            responseDTO.setContent(scheduleDTOList);
+            return new ResponseEntity(responseDTO, HttpStatus.ACCEPTED);
 
+        } catch (Exception exception) {
+
+            responseDTO.setCode(VarList.RSP_ERROR);
+            responseDTO.setMessage(exception.getMessage());
+            responseDTO.setContent(null);
+            return new ResponseEntity(responseDTO, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @GetMapping("/getAllScheduleByCountryAndJobType/{country}/{jobType}")
+    public ResponseEntity getAllScheduleByCountryAndJobType(@PathVariable String country ,@PathVariable String jobType){
+
+        try {
+            List<ScheduleSummaryDTO> scheduleDTOS = scheduleService.getAllScheduleByCountryAndJobType(country,jobType);
+            if (scheduleDTOS !=null) {
+                responseDTO.setCode(VarList.RSP_SUCCESS);
+                responseDTO.setMessage("Success");
+                responseDTO.setContent(scheduleDTOS);
+                System.out.println(responseDTO);
+                return new ResponseEntity(responseDTO, HttpStatus.ACCEPTED);
+            } else {
+                responseDTO.setCode(VarList.RSP_NO_DATA_FOUND);
+                responseDTO.setMessage("No product Available For this ID");
+                responseDTO.setContent(null);
+                return new ResponseEntity(responseDTO, HttpStatus.BAD_REQUEST);
+            }
+        } catch (Exception exception) {
+            responseDTO.setCode(VarList.RSP_ERROR);
+            responseDTO.setMessage(exception.getMessage());
+            responseDTO.setContent(exception);
+            return new ResponseEntity(responseDTO, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
