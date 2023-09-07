@@ -3,6 +3,7 @@ package com.thejobs.onlineappointmentschedulingwebsite.entity;
 import jakarta.persistence.*;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -26,32 +27,28 @@ public class Consultant {
 
     @Column  (name = "password", length = 100,nullable = false)
     private String password;
-    @ManyToMany
-    @JoinTable(
-            name = "consultant_country",
-            joinColumns = @JoinColumn(name = "consultant_id", nullable = false),
-            inverseJoinColumns = @JoinColumn(name = "country_id")
-    )
-    private Set<Country> countries = new HashSet<>();
 
-    @ManyToMany
-    @JoinTable(
-            name = "consultant_job",
-            joinColumns = @JoinColumn(name = "consultant_id", nullable = false),
-            inverseJoinColumns = @JoinColumn(name = "job_id")
-    )
-    private Set<Job> jobTypes = new HashSet<>();
-    @ManyToMany
-    @JoinTable(
-            name = "consultant_time",
-            joinColumns = @JoinColumn(name = "consultant_id", nullable = false),
-            inverseJoinColumns = @JoinColumn(name = "time_id")
-    )
-    private Set<Time> availableTimes = new HashSet<>();
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "consultant")
+    private List<Appointment> appointment;
+
+
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "consultant")
+    private List<Schedule> schedule;
 
     public Consultant() {
     }
 
+    public Consultant(long id, String fName, String lName, String gender, String email, String contactNumber, String password, List<Appointment> appointment, List<Schedule> schedule) {
+        this.id = id;
+        this.fName = fName;
+        this.lName = lName;
+        this.gender = gender;
+        this.email = email;
+        this.contactNumber = contactNumber;
+        this.password = password;
+        this.appointment = appointment;
+        this.schedule = schedule;
+    }
     public Consultant( String fName, String lName, String gender, String email, String contactNumber, String password) {
 //        , Set<Country> countries, Set<Job> jobTypes, Set<Time> availableTimes
 //        this.id = id;
@@ -65,8 +62,6 @@ public class Consultant {
 //        this.jobTypes = jobTypes;
 //        this.availableTimes = availableTimes;
     }
-
-
 
     public long getId() {
         return id;
@@ -124,28 +119,20 @@ public class Consultant {
         this.password = password;
     }
 
-    public Set<Country> getCountries() {
-        return countries;
+    public List<Appointment> getAppointment() {
+        return appointment;
     }
 
-    public void setCountries(Set<Country> countries) {
-        this.countries = countries;
+    public void setAppointment(List<Appointment> appointment) {
+        this.appointment = appointment;
     }
 
-    public Set<Job> getJobTypes() {
-        return jobTypes;
+    public List<Schedule> getSchedule() {
+        return schedule;
     }
 
-    public void setJobTypes(Set<Job> jobTypes) {
-        this.jobTypes = jobTypes;
-    }
-
-    public Set<Time> getAvailableTimes() {
-        return availableTimes;
-    }
-
-    public void setAvailableTimes(Set<Time> availableTimes) {
-        this.availableTimes = availableTimes;
+    public void setSchedule(List<Schedule> schedule) {
+        this.schedule = schedule;
     }
 
     @Override
@@ -158,9 +145,8 @@ public class Consultant {
                 ", email='" + email + '\'' +
                 ", contactNumber='" + contactNumber + '\'' +
                 ", password='" + password + '\'' +
-                ", countries=" + countries +
-                ", jobTypes=" + jobTypes +
-                ", availableTimes=" + availableTimes +
+                ", appointment=" + appointment +
+                ", schedule=" + schedule +
                 '}';
     }
 }

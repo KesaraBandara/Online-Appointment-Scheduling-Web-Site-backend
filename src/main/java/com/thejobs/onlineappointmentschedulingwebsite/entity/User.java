@@ -2,6 +2,8 @@ package com.thejobs.onlineappointmentschedulingwebsite.entity;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 
 @Entity
 @Table(name = "user")
@@ -25,9 +27,22 @@ public class User {
     @Column  (name = "password", length = 100,nullable = false)
     private String password;
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    private List<Appointment> appointment;
+
     public User() {
     }
 
+    public User(long id, String fName, String lName, String gender, String email, String contactNumber, String password, List<Appointment> appointment) {
+        this.id = id;
+        this.fName = fName;
+        this.lName = lName;
+        this.gender = gender;
+        this.email = email;
+        this.contactNumber = contactNumber;
+        this.password = password;
+        this.appointment = appointment;
+    }
     public User( String fName, String lName, String gender, String email, String contactNumber, String password) {
 
         this.fName = fName;
@@ -94,6 +109,14 @@ public class User {
         this.password = password;
     }
 
+    public List<Appointment> getAppointment() {
+        return appointment;
+    }
+
+    public void setAppointment(List<Appointment> appointment) {
+        this.appointment = appointment;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -104,6 +127,7 @@ public class User {
                 ", email='" + email + '\'' +
                 ", contactNumber='" + contactNumber + '\'' +
                 ", password='" + password + '\'' +
+                ", appointment=" + appointment +
                 '}';
     }
 }
