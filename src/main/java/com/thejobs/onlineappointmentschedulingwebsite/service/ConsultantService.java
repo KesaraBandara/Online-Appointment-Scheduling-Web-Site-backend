@@ -22,6 +22,7 @@ import javax.xml.bind.DatatypeConverter;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,20 +32,16 @@ import org.slf4j.LoggerFactory;
 public class ConsultantService {
 
     @Autowired
-    private ConsultantRepo consultantRepo;
-
-    @Autowired
-    private ModelMapper modelMapper;
-
-    @Autowired
     AuthenticationService authenticationService;
-
     @Autowired
     TokenRepo tokenRepo;
     @Autowired
-     PasswordHasher passwordHasher;
-
+    PasswordHasher passwordHasher;
     Logger logger = LoggerFactory.getLogger(ConsultantService.class);
+    @Autowired
+    private ConsultantRepo consultantRepo;
+    @Autowired
+    private ModelMapper modelMapper;
 
     public String saveConsultant(ConsultantDTO consultantDTO) {
 
@@ -64,7 +61,7 @@ public class ConsultantService {
         }
 
 
-        Consultant consultant = new Consultant(consultantDTO.getfName(), consultantDTO.getlName(),consultantDTO.getGender() ,consultantDTO.getEmail(),consultantDTO.getContactNumber(),encryptedPassword  );
+        Consultant consultant = new Consultant(consultantDTO.getfName(), consultantDTO.getlName(), consultantDTO.getGender(), consultantDTO.getEmail(), consultantDTO.getContactNumber(), encryptedPassword);
 
         Consultant createdConsultant;
         try {
@@ -81,7 +78,6 @@ public class ConsultantService {
             // handle signup error
             return VarList.RSP_ERROR;
         }
-
     }
 
     public List<ConsultantDTO> getAllConsultants() {
@@ -138,20 +134,8 @@ public class ConsultantService {
             throw new CustomException("Token not present");
         }
 
-        return new ConsultantSignInResponseDTO(token.getToken(),VarList.RSP_SUCCESS);
+        return new ConsultantSignInResponseDTO(token.getToken(), VarList.RSP_SUCCESS);
     }
-
-    // ... Rest of the service class
-
-
-//    String hashPassword(String password) throws NoSuchAlgorithmException {
-//        MessageDigest md = MessageDigest.getInstance("MD5");
-//        md.update(password.getBytes());
-//        byte[] digest = md.digest();
-//        String myHash = DatatypeConverter
-//                .printHexBinary(digest).toUpperCase();
-//        return myHash;
-//    }
 
 
     public String deleteConsultant(String id) {

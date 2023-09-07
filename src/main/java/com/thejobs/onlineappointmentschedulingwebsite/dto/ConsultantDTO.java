@@ -8,14 +8,15 @@ public class ConsultantDTO {
     private String email;
     private String contactNumber;
     private String password;
-    private CountryDTO country;
-    private JobDTO jobType;
-    private TimeDTO time;
+    private AppointmentDTO appointment;
+    private ScheduleDTO schedule;
+//    private TimeDTO time;
+
 
     public ConsultantDTO() {
     }
 
-    public ConsultantDTO(long id, String fName, String lName, String gender, String email, String contactNumber, String password, CountryDTO country, JobDTO jobType, TimeDTO time) {
+    public ConsultantDTO(long id, String fName, String lName, String gender, String email, String contactNumber, String password, AppointmentDTO appointment, ScheduleDTO schedule) {
         this.id = id;
         this.fName = fName;
         this.lName = lName;
@@ -23,9 +24,8 @@ public class ConsultantDTO {
         this.email = email;
         this.contactNumber = contactNumber;
         this.password = password;
-        this.country = country;
-        this.jobType = jobType;
-        this.time = time;
+        this.appointment = appointment;
+        this.schedule = schedule;
     }
 
     public long getId() {
@@ -84,28 +84,20 @@ public class ConsultantDTO {
         this.password = password;
     }
 
-    public CountryDTO getCountry() {
-        return country;
+    public AppointmentDTO getAppointment() {
+        return appointment;
     }
 
-    public void setCountry(CountryDTO country) {
-        this.country = country;
+    public void setAppointment(AppointmentDTO appointment) {
+        this.appointment = appointment;
     }
 
-    public JobDTO getJobType() {
-        return jobType;
+    public ScheduleDTO getSchedule() {
+        return schedule;
     }
 
-    public void setJobType(JobDTO jobType) {
-        this.jobType = jobType;
-    }
-
-    public TimeDTO getTime() {
-        return time;
-    }
-
-    public void setTime(TimeDTO time) {
-        this.time = time;
+    public void setSchedule(ScheduleDTO schedule) {
+        this.schedule = schedule;
     }
 
     @Override
@@ -118,9 +110,8 @@ public class ConsultantDTO {
                 ", email='" + email + '\'' +
                 ", contactNumber='" + contactNumber + '\'' +
                 ", password='" + password + '\'' +
-                ", country=" + country +
-                ", jobType=" + jobType +
-                ", time=" + time +
+                ", appointment=" + appointment +
+                ", schedule=" + schedule +
                 '}';
     }
 }

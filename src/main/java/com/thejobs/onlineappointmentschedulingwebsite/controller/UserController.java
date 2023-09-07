@@ -32,6 +32,7 @@ public class UserController {
                 responseDTO.setCode(VarList.RSP_SUCCESS);
                 responseDTO.setMessage("Success");
                 responseDTO.setContent(userDTO);
+                System.out.println(responseDTO);
                 return new ResponseEntity(responseDTO, HttpStatus.ACCEPTED);
             } else if (res.equals("06")) {
                 responseDTO.setCode(VarList.RSP_DUPLICATED);

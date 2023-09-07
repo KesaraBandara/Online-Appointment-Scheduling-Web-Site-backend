@@ -17,7 +17,9 @@ public class UserAuthenticationService {
     UserTokenRepo userTokenRepo;
 
 
-    public void saveConfirmationToken(AuthenticationTokenUser authenticationTokenUser) {userTokenRepo.save(authenticationTokenUser);}
+    public void saveConfirmationToken(AuthenticationTokenUser authenticationTokenUser) {
+        userTokenRepo.save(authenticationTokenUser);
+    }
 
     public AuthenticationTokenUser getUserToken(Optional<User> user) {
         return userTokenRepo.findTokenByUser(user);

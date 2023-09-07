@@ -1,12 +1,8 @@
 package com.thejobs.onlineappointmentschedulingwebsite.service;
 
-import com.thejobs.onlineappointmentschedulingwebsite.dto.ConsultantDTO;
-import com.thejobs.onlineappointmentschedulingwebsite.dto.ConsultantSignInResponseDTO;
 import com.thejobs.onlineappointmentschedulingwebsite.dto.UserDTO;
 import com.thejobs.onlineappointmentschedulingwebsite.dto.UserSignInResponseDTO;
-import com.thejobs.onlineappointmentschedulingwebsite.entity.AuthenticationToken;
 import com.thejobs.onlineappointmentschedulingwebsite.entity.AuthenticationTokenUser;
-import com.thejobs.onlineappointmentschedulingwebsite.entity.Consultant;
 import com.thejobs.onlineappointmentschedulingwebsite.entity.User;
 import com.thejobs.onlineappointmentschedulingwebsite.exceptions.AuthenticationFailException;
 import com.thejobs.onlineappointmentschedulingwebsite.exceptions.CustomException;
@@ -31,22 +27,16 @@ import java.util.Optional;
 public class UserService {
 
     @Autowired
-    private UserRepo userRepo;
-
-    @Autowired
-    private ModelMapper modelMapper;
-
-    @Autowired
     UserAuthenticationService userAuthenticationService;
-
     @Autowired
     UserTokenRepo userTokenRepo;
-
     @Autowired
     PasswordHasher passwordHasher;
-
     Logger logger = LoggerFactory.getLogger(ConsultantService.class);
-
+    @Autowired
+    private UserRepo userRepo;
+    @Autowired
+    private ModelMapper modelMapper;
 
     public String signUpUser(UserDTO userDTO) {
 
@@ -66,7 +56,7 @@ public class UserService {
         }
 
 
-        User user = new User(userDTO.getfName(), userDTO.getlName(),userDTO.getGender() ,userDTO.getEmail(),userDTO.getContactNumber(),encryptedPassword  );
+        User user = new User(userDTO.getfName(), userDTO.getlName(), userDTO.getGender(), userDTO.getEmail(), userDTO.getContactNumber(), encryptedPassword);
 
         User createdUser;
         try {
@@ -81,61 +71,9 @@ public class UserService {
             return VarList.RSP_SUCCESS;
         } catch (Exception e) {
             // handle signup error
-            return VarList.RSP_ERROR;
+            return VarList.RSP_SUCCESS;
         }
     }
-
-
-//        public String updateUser(UserDTO userDTO) {
-//            if (userRepo.existsById(userDTO.getId())) {
-//                // Check if a new password is provided
-//                if (userDTO.getPassword() != null) {
-//                    try {
-//                        String hashedPassword = passwordHasher.hashPassword(userDTO.getPassword());
-//                        userDTO.setPassword(hashedPassword); // Update the DTO with the hashed password
-//                    } catch (NoSuchAlgorithmException e) {
-//                        e.printStackTrace();
-//                        logger.error("Hashing password failed: {}", e.getMessage());
-//                        return VarList.RSP_ERROR; // Handle the hashing error as needed
-//                    }
-//                }
-//
-//                userRepo.save(modelMapper.map(userDTO, User.class));
-//                return VarList.RSP_SUCCESS;
-//            } else {
-//                return VarList.RSP_NO_DATA_FOUND;
-//            }
-//        }
-//    }
-//    public UserSignInResponseDTO signInUser(UserDTO userDTO) {
-//        String email = userDTO.getEmail();
-//        String providedPassword = userDTO.getPassword();
-//
-//        User user = userRepo.findByEmail(email);
-//        if (user == null) {
-//            System.out.println("okkkk");
-//            throw new AuthenticationFailException("user not present");
-//        }
-//
-//        try {
-//            String hashedProvidedPassword = passwordHasher.hashPassword(providedPassword);
-//            if (!hashedProvidedPassword.equals(user.getPassword())) {
-//                throw new AuthenticationFailException("Incorrect password");
-//            }
-//        } catch (NoSuchAlgorithmException e) {
-//            e.printStackTrace();
-//            logger.error("Hashing password failed: {}", e.getMessage());
-//            throw new CustomException(e.getMessage());
-//        }
-//
-//        AuthenticationTokenUser token = userAuthenticationService.getUserToken()(Optional.of(user));
-//        if (!Helper.notNull(token)) {
-//            throw new CustomException("Token not present");
-//        }
-//
-//        return new UserSignInResponseDTO(token.getUserToken(),VarList.RSP_SUCCESS);
-//    }
-
 
 
     public List<UserDTO> getAllUsers() {
@@ -184,7 +122,6 @@ public class UserService {
     }
 
 
-
     public UserSignInResponseDTO signInUser(UserDTO userDTO) {
         String email = userDTO.getEmail();
         String providedPassword = userDTO.getPassword();
@@ -210,6 +147,6 @@ public class UserService {
             throw new CustomException("Token not present");
         }
 
-        return new UserSignInResponseDTO(token.getUserToken(),VarList.RSP_SUCCESS);
+        return new UserSignInResponseDTO(token.getUserToken(), VarList.RSP_SUCCESS);
     }
 }

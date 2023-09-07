@@ -14,16 +14,14 @@ public class Country {
     private long id;
     @Column  (name = "country", length = 20,nullable = false)
     private String country;
-    @ManyToMany(mappedBy = "countries")
-    private Set<Consultant> consultants = new HashSet<>();
+
 
     public Country() {
     }
 
-    public Country(long id, String country, Set<Consultant> consultants) {
+    public Country(long id, String country) {
         this.id = id;
         this.country = country;
-        this.consultants = consultants;
     }
 
     public long getId() {
@@ -42,20 +40,11 @@ public class Country {
         this.country = country;
     }
 
-    public Set<Consultant> getConsultants() {
-        return consultants;
-    }
-
-    public void setConsultants(Set<Consultant> consultants) {
-        this.consultants = consultants;
-    }
-
     @Override
     public String toString() {
         return "Country{" +
                 "id=" + id +
                 ", country='" + country + '\'' +
-                ", consultants=" + consultants +
                 '}';
     }
 }

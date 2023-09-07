@@ -15,16 +15,14 @@ public class Job {
     private long id;
     @Column  (name = "job_type", length = 20,nullable = false)
     private String jobType;
-    @ManyToMany(mappedBy = "jobTypes")
-    private Set<Consultant> consultants = new HashSet<>();
+
 
     public Job() {
     }
 
-    public Job(long id, String jobType, Set<Consultant> consultants) {
+    public Job(long id, String jobType) {
         this.id = id;
         this.jobType = jobType;
-        this.consultants = consultants;
     }
 
     public long getId() {
@@ -43,20 +41,11 @@ public class Job {
         this.jobType = jobType;
     }
 
-    public Set<Consultant> getConsultants() {
-        return consultants;
-    }
-
-    public void setConsultants(Set<Consultant> consultants) {
-        this.consultants = consultants;
-    }
-
     @Override
     public String toString() {
         return "Job{" +
                 "id=" + id +
                 ", jobType='" + jobType + '\'' +
-                ", consultants=" + consultants +
                 '}';
     }
 }
