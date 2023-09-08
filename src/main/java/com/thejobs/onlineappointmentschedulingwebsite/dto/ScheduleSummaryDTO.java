@@ -12,6 +12,7 @@ public class ScheduleSummaryDTO {
     private String country;
     private String day;
     private String jobType;
+    private String time;
     private long consultantId;
 
     // Constructors, getters, and setters for these fields

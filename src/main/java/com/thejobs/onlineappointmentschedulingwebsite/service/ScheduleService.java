@@ -91,6 +91,7 @@ public class ScheduleService {
         dto.setCountry(schedule.getCountry());
         dto.setDay(schedule.getDay());
         dto.setJobType(schedule.getJobType());
+        dto.setTime(schedule.getTime());
         dto.setConsultantId(schedule.getConsultant().getId());
         return dto;
     }
