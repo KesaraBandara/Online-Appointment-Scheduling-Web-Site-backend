@@ -15,4 +15,5 @@ public interface TokenRepo extends JpaRepository<AuthenticationToken, Integer> {
 
     Optional<AuthenticationToken> findByConsultantId(Long consultantId);
 
+//    Consultant findByToken(String token);
 }

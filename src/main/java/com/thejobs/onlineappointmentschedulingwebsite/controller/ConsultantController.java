@@ -142,6 +142,28 @@ public class ConsultantController {
         return ResponseEntity.ok("Logged out successfully");
     }
 
+    @GetMapping("/getConsultantByToken/{token}")
+    public ResponseEntity getConsultantByToken(@PathVariable String token) {
+
+        try {
+
+            Long ConsultantId = consultantService.getConsultantByToken(token);
+            responseDTO.setCode(VarList.RSP_SUCCESS);
+            responseDTO.setMessage("Success");
+            responseDTO.setContent(ConsultantId);
+            return new ResponseEntity(responseDTO, HttpStatus.ACCEPTED);
+
+
+        } catch (Exception exception) {
+
+            responseDTO.setCode(VarList.RSP_ERROR);
+            responseDTO.setMessage(exception.getMessage());
+            responseDTO.setContent(null);
+            return new ResponseEntity(responseDTO, HttpStatus.INTERNAL_SERVER_ERROR);
+
+        }
+    }
+
 
 
 }

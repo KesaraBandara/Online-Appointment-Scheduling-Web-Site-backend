@@ -8,6 +8,5 @@ public interface ConsultantRepo extends JpaRepository<Consultant,Long> {
     Consultant findByEmail(String email);
 
 
-
-
+//    Consultant findByToken(String token);
 }

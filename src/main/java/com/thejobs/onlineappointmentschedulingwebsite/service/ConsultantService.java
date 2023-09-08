@@ -11,6 +11,7 @@ import com.thejobs.onlineappointmentschedulingwebsite.repo.ConsultantRepo;
 import com.thejobs.onlineappointmentschedulingwebsite.repo.TokenRepo;
 import com.thejobs.onlineappointmentschedulingwebsite.util.Helper;
 import com.thejobs.onlineappointmentschedulingwebsite.util.VarList;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -151,6 +152,17 @@ public class ConsultantService {
             return VarList.RSP_SUCCESS;
         } else {
             return VarList.RSP_NO_DATA_FOUND;
+        }
+    }
+
+    public Long getConsultantByToken(String token) {
+        AuthenticationToken authToken = tokenRepo.findTokenByToken(token);
+
+        if (authToken != null && authToken.getConsultant() != null) {
+            return authToken.getConsultant().getId();
+        } else {
+
+            throw new EntityNotFoundException("Consultant not found for the given token: " + token);
         }
     }
 }
