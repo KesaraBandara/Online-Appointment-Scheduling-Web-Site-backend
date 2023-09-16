@@ -23,7 +23,11 @@ public class Appointment {
     private String date;
     @Column(name = "day",length = 100)
     private String day;
+    @Column(name = "country",length = 100)
+    private String country;
 
+    @Column(name = "job_type",length = 100)
+    private String jobType;
 //    @Column(name = "created_date", length = 100)
 //    @Temporal(TemporalType.TIMESTAMP)
 //    private Date createDate;
@@ -44,11 +48,13 @@ public class Appointment {
     public Appointment() {
     }
 
-    public Appointment(long id, String time, String date, String day, boolean activeState, User user, Consultant consultant) {
+    public Appointment(long id, String time, String date, String day, String country, String jobType, boolean activeState, User user, Consultant consultant) {
         this.id = id;
         this.time = time;
         this.date = date;
         this.day = day;
+        this.country = country;
+        this.jobType = jobType;
         this.activeState = activeState;
         this.user = user;
         this.consultant = consultant;
@@ -86,6 +92,22 @@ public class Appointment {
         this.day = day;
     }
 
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getJobType() {
+        return jobType;
+    }
+
+    public void setJobType(String jobType) {
+        this.jobType = jobType;
+    }
+
     public boolean isActiveState() {
         return activeState;
     }
@@ -117,6 +139,8 @@ public class Appointment {
                 ", time='" + time + '\'' +
                 ", date='" + date + '\'' +
                 ", day='" + day + '\'' +
+                ", country='" + country + '\'' +
+                ", jobType='" + jobType + '\'' +
                 ", activeState=" + activeState +
                 ", user=" + user +
                 ", consultant=" + consultant +

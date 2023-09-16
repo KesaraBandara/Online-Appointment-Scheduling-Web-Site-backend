@@ -1,8 +1,6 @@
 package com.thejobs.onlineappointmentschedulingwebsite.controller;
 
-import com.thejobs.onlineappointmentschedulingwebsite.dto.AppointmentDTO;
-import com.thejobs.onlineappointmentschedulingwebsite.dto.AppointmentVerifyDTO;
-import com.thejobs.onlineappointmentschedulingwebsite.dto.ResponseDTO;
+import com.thejobs.onlineappointmentschedulingwebsite.dto.*;
 import com.thejobs.onlineappointmentschedulingwebsite.service.AppointmentService;
 import com.thejobs.onlineappointmentschedulingwebsite.util.VarList;
 import jakarta.persistence.EntityNotFoundException;
@@ -10,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/appointment")
@@ -73,6 +73,48 @@ public class AppointmentController {
             responseDTO.setMessage(exception.getMessage());
             responseDTO.setContent(null);
             return new ResponseEntity(responseDTO, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @GetMapping("/getAllAppointmentById/{id}")
+    public ResponseEntity getAllAppointmentById(@PathVariable String id) {
+
+        try {
+
+            List<AppointmentDTO> AppointmentDTOList = appointmentService.getAllAppointmentById(id);
+            responseDTO.setCode(VarList.RSP_SUCCESS);
+            responseDTO.setMessage("Success");
+            responseDTO.setContent(AppointmentDTOList);
+            return new ResponseEntity(responseDTO, HttpStatus.ACCEPTED);
+
+
+        } catch (Exception exception) {
+
+            responseDTO.setCode(VarList.RSP_ERROR);
+            responseDTO.setMessage(exception.getMessage());
+            responseDTO.setContent(null);
+            return new ResponseEntity(responseDTO, HttpStatus.INTERNAL_SERVER_ERROR);
+
+        }
+    }
+
+    @GetMapping("/getAllAppointments")
+    public ResponseEntity getAllAppointments() {
+
+        try {
+            List<AppointmentDTO> appointmentDTOList = appointmentService.getAllAppointments();
+            responseDTO.setCode(VarList.RSP_SUCCESS);
+            responseDTO.setMessage("Success");
+            System.out.println(appointmentDTOList);
+            responseDTO.setContent(appointmentDTOList);
+            return new ResponseEntity(responseDTO, HttpStatus.ACCEPTED);
+
+        } catch (Exception exception) {
+
+            responseDTO.setCode(VarList.RSP_ERROR);
+            responseDTO.setMessage(exception.getMessage());
+            responseDTO.setContent(null);
+            return new ResponseEntity(responseDTO, HttpStatus.INTERNAL_SERVER_ERROR);
+
         }
     }
 

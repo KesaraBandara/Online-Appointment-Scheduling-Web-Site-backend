@@ -4,21 +4,24 @@ public class AppointmentDTO {
 
     private long id;
 //    private String userId;
-
     private String time;
     private String date;
     private String day;
+    private String country;
+    private String jobType;
     private UserDTO userDTO;
     private ConsultantDTO consultant;
 
     public AppointmentDTO() {
     }
 
-    public AppointmentDTO(long id, String time, String date, String day, UserDTO userDTO, ConsultantDTO consultant) {
+    public AppointmentDTO(long id, String time, String date, String day, String country, String jobType, UserDTO userDTO, ConsultantDTO consultant) {
         this.id = id;
         this.time = time;
         this.date = date;
         this.day = day;
+        this.country = country;
+        this.jobType = jobType;
         this.userDTO = userDTO;
         this.consultant = consultant;
     }
@@ -55,6 +58,22 @@ public class AppointmentDTO {
         this.day = day;
     }
 
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getJobType() {
+        return jobType;
+    }
+
+    public void setJobType(String jobType) {
+        this.jobType = jobType;
+    }
+
     public UserDTO getUserDTO() {
         return userDTO;
     }
@@ -78,6 +97,8 @@ public class AppointmentDTO {
                 ", time='" + time + '\'' +
                 ", date='" + date + '\'' +
                 ", day='" + day + '\'' +
+                ", country='" + country + '\'' +
+                ", jobType='" + jobType + '\'' +
                 ", userDTO=" + userDTO +
                 ", consultant=" + consultant +
                 '}';
