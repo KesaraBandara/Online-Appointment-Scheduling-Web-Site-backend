@@ -130,17 +130,37 @@ public class UserController {
     @PostMapping(value = "/signIn")
     public ResponseEntity signInUser(@RequestBody UserDTO userDTO) {
 
+        System.out.println(userDTO);
         return ResponseEntity.ok(userService.signInUser(userDTO));
 
 
     }
     @PostMapping("/logout")
     public ResponseEntity<String> logout() {
-        // Perform logout actions, such as invalidating the session or clearing tokens
-        // ...
 
-        // Return a response indicating successful logout
         return ResponseEntity.ok("Logged out successfully");
+    }
+
+    @GetMapping("/getUserByToken/{token}")
+    public ResponseEntity getUserByToken(@PathVariable String token) {
+
+        try {
+
+            Long ConsultantId = userService.getUserByToken(token);
+            responseDTO.setCode(VarList.RSP_SUCCESS);
+            responseDTO.setMessage("Success");
+            responseDTO.setContent(ConsultantId);
+            return new ResponseEntity(responseDTO, HttpStatus.ACCEPTED);
+
+
+        } catch (Exception exception) {
+
+            responseDTO.setCode(VarList.RSP_ERROR);
+            responseDTO.setMessage(exception.getMessage());
+            responseDTO.setContent(null);
+            return new ResponseEntity(responseDTO, HttpStatus.INTERNAL_SERVER_ERROR);
+
+        }
     }
 
 }

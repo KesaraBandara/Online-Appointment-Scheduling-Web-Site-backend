@@ -23,6 +23,9 @@ public class UserDTO {
         this.password = password;
     }
 
+    public UserDTO(String john, String doe, String male, String s, String s1) {
+    }
+
     public long getId() {
         return id;
     }

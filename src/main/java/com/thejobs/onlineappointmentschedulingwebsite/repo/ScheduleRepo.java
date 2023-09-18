@@ -11,21 +11,13 @@ import java.util.Optional;
 @Repository
 public interface ScheduleRepo extends JpaRepository<Schedule,Long> {
 
-//    @Query(  "SELECT s FROM Schedule s WHERE s.consultant = :consultant " +
-//            "AND s.time = :time " +
-//            "AND s.day = :day " )
-//    Schedule findByTokenTimeDay(
-//            @Param("consultant") String token,
-//            @Param("time") String time,
-//            @Param("day") String day
-//    );
+
 
     List<Schedule> getAllScheduleByConsultant(Optional<Consultant> consultant);
 
 
     List<Schedule> getScheduleByCountryAndJobType(String country, String jobType);
 
-//    Schedule findByConsultantTimeDay(String time, String day, ConsultantDTO consultant);
 
     Schedule findByTimeAndDayAndConsultant(String time, String day, Consultant consultant);
 }

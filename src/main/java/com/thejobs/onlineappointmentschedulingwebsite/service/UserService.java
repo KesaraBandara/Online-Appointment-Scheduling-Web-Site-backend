@@ -2,6 +2,7 @@ package com.thejobs.onlineappointmentschedulingwebsite.service;
 
 import com.thejobs.onlineappointmentschedulingwebsite.dto.UserDTO;
 import com.thejobs.onlineappointmentschedulingwebsite.dto.UserSignInResponseDTO;
+import com.thejobs.onlineappointmentschedulingwebsite.entity.AuthenticationToken;
 import com.thejobs.onlineappointmentschedulingwebsite.entity.AuthenticationTokenUser;
 import com.thejobs.onlineappointmentschedulingwebsite.entity.User;
 import com.thejobs.onlineappointmentschedulingwebsite.exceptions.AuthenticationFailException;
@@ -10,6 +11,7 @@ import com.thejobs.onlineappointmentschedulingwebsite.repo.UserRepo;
 import com.thejobs.onlineappointmentschedulingwebsite.repo.UserTokenRepo;
 import com.thejobs.onlineappointmentschedulingwebsite.util.Helper;
 import com.thejobs.onlineappointmentschedulingwebsite.util.VarList;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -27,25 +29,62 @@ import java.util.Optional;
 public class UserService {
 
     @Autowired
-    UserAuthenticationService userAuthenticationService;
+    private UserAuthenticationService userAuthenticationService;
     @Autowired
-    UserTokenRepo userTokenRepo;
+    private UserTokenRepo userTokenRepo;
     @Autowired
-    PasswordHasher passwordHasher;
-    Logger logger = LoggerFactory.getLogger(ConsultantService.class);
+    private PasswordHasher passwordHasher;
     @Autowired
     private UserRepo userRepo;
     @Autowired
     private ModelMapper modelMapper;
 
-    public String signUpUser(UserDTO userDTO) {
+    Logger logger = LoggerFactory.getLogger(ConsultantService.class);
 
 //
+//    public String signUpUser(UserDTO userDTO) {
+//
+//        // Check to see if the current email address has already been registered.
+//        if (Helper.notNull(userRepo.findByEmail(userDTO.getEmail()))) {
+//            // If the email address has been registered then throw an exception.
+//            return VarList.RSP_DUPLICATED;
+//        }
+//        // first encrypt the password
+//        String encryptedPassword = userDTO.getPassword();
+//        try {
+//            encryptedPassword = passwordHasher.hashPassword(userDTO.getPassword()); // Use the PasswordHasher bean
+//        } catch (NoSuchAlgorithmException e) {
+//            e.printStackTrace();
+//            logger.error("Hashing password failed: {}", e.getMessage());
+//        }
+//
+//        User user = new User(userDTO.getfName(), userDTO.getlName(), userDTO.getGender(), userDTO.getEmail(), userDTO.getContactNumber(), encryptedPassword);
+//
+//        User createdUser;
+//        try {
+//            // save the User
+//            createdUser = userRepo.save(user);
+//            System.out.println(createdUser);
+//            // generate token for user
+//            final AuthenticationTokenUser authenticationTokenUser = new AuthenticationTokenUser(createdUser);
+//            // save token in database
+//            userAuthenticationService.saveConfirmationToken(authenticationTokenUser);
+//            // success in creating
+//            return VarList.RSP_SUCCESS;
+//        } catch (Exception e) {
+//            // handle signup error
+//            return VarList.RSP_SUCCESS;
+//        }
+//    }
+
+    public String signUpUser(UserDTO userDTO) {
         // Check to see if the current email address has already been registered.
-        if (Helper.notNull(userRepo.findByEmail(userDTO.getEmail()))) {
-            // If the email address has been registered then throw an exception.
+        User existingUser = userRepo.findByEmail(userDTO.getEmail());
+        if (existingUser != null) {
+            // If the email address has been registered then return a response indicating duplication.
             return VarList.RSP_DUPLICATED;
         }
+
         // first encrypt the password
         String encryptedPassword = userDTO.getPassword();
         try {
@@ -53,8 +92,9 @@ public class UserService {
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
             logger.error("Hashing password failed: {}", e.getMessage());
+            // Handle the hashing error here, you can return an appropriate response code
+            return VarList.RSP_ERROR;
         }
-
 
         User user = new User(userDTO.getfName(), userDTO.getlName(), userDTO.getGender(), userDTO.getEmail(), userDTO.getContactNumber(), encryptedPassword);
 
@@ -65,16 +105,15 @@ public class UserService {
             System.out.println(createdUser);
             // generate token for user
             final AuthenticationTokenUser authenticationTokenUser = new AuthenticationTokenUser(createdUser);
-            // save token in database
+            // save token in the database
             userAuthenticationService.saveConfirmationToken(authenticationTokenUser);
             // success in creating
             return VarList.RSP_SUCCESS;
         } catch (Exception e) {
             // handle signup error
-            return VarList.RSP_SUCCESS;
+            return VarList.RSP_ERROR;
         }
     }
-
 
     public List<UserDTO> getAllUsers() {
         List<User> usersList = userRepo.findAll();
@@ -149,4 +188,17 @@ public class UserService {
 
         return new UserSignInResponseDTO(token.getUserToken(), VarList.RSP_SUCCESS);
     }
-}
+
+    public Long getUserByToken(String token) {
+        AuthenticationTokenUser authToken = userTokenRepo.findTokenByUserToken(token);
+
+        if (authToken != null && authToken.getUser() != null) {
+            return authToken.getUser().getId();
+        } else {
+
+            throw new EntityNotFoundException("Consultant not found for the given token: " + token);
+        }
+    }
+
+    }
+

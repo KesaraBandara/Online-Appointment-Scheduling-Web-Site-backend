@@ -14,7 +14,7 @@ import java.util.Optional;
 public class UserAuthenticationService {
 
     @Autowired
-    UserTokenRepo userTokenRepo;
+    private UserTokenRepo userTokenRepo;
 
 
     public void saveConfirmationToken(AuthenticationTokenUser authenticationTokenUser) {

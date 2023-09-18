@@ -44,39 +44,84 @@ public class ConsultantService {
     @Autowired
     private ModelMapper modelMapper;
 
-    public String saveConsultant(ConsultantDTO consultantDTO) {
-
+//    public String saveConsultant(ConsultantDTO consultantDTO) {
 //
+////
+//        // Check to see if the current email address has already been registered.
+//        if (Helper.notNull(consultantRepo.findByEmail(consultantDTO.getEmail()))) {
+//            // If the email address has been registered then throw an exception.
+//            return VarList.RSP_DUPLICATED;
+//        }
+//        // first encrypt the password
+//        String encryptedPassword = consultantDTO.getPassword();
+//        try {
+//            encryptedPassword = passwordHasher.hashPassword(consultantDTO.getPassword());
+//        } catch (NoSuchAlgorithmException e) {
+//            e.printStackTrace();
+//            logger.error("hashing password failed {}", e.getMessage());
+//        }
+//
+//
+//        Consultant consultant = new Consultant(consultantDTO.getfName(), consultantDTO.getlName(), consultantDTO.getGender(), consultantDTO.getEmail(), consultantDTO.getContactNumber(), encryptedPassword);
+//
+//        Consultant createdConsultant;
+//        try {
+//            // save the User
+//            createdConsultant = consultantRepo.save(consultant);
+//            System.out.println(createdConsultant);
+//            // generate token for user
+//            final AuthenticationToken authenticationToken = new AuthenticationToken(createdConsultant);
+//            // save token in database
+//            authenticationService.saveConfirmationToken(authenticationToken);
+//            // success in creating
+//            return VarList.RSP_SUCCESS;
+//        } catch (Exception e) {
+//            // handle signup error
+//            return VarList.RSP_ERROR;
+//        }
+//    }
+
+    public String saveConsultant(ConsultantDTO consultantDTO) {
         // Check to see if the current email address has already been registered.
-        if (Helper.notNull(consultantRepo.findByEmail(consultantDTO.getEmail()))) {
-            // If the email address has been registered then throw an exception.
+        Consultant existingConsultant = consultantRepo.findByEmail(consultantDTO.getEmail());
+        if (existingConsultant != null) {
+            // If the email address has been registered, return a response indicating duplication.
             return VarList.RSP_DUPLICATED;
         }
-        // first encrypt the password
+
+        // First, encrypt the password
         String encryptedPassword = consultantDTO.getPassword();
         try {
             encryptedPassword = passwordHasher.hashPassword(consultantDTO.getPassword());
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
-            logger.error("hashing password failed {}", e.getMessage());
+            logger.error("Hashing password failed: {}", e.getMessage());
+            // Handle the hashing error here; you can return an appropriate response code.
+            return VarList.RSP_ERROR;
         }
 
-
-        Consultant consultant = new Consultant(consultantDTO.getfName(), consultantDTO.getlName(), consultantDTO.getGender(), consultantDTO.getEmail(), consultantDTO.getContactNumber(), encryptedPassword);
+        Consultant consultant = new Consultant(
+                consultantDTO.getfName(),
+                consultantDTO.getlName(),
+                consultantDTO.getGender(),
+                consultantDTO.getEmail(),
+                consultantDTO.getContactNumber(),
+                encryptedPassword
+        );
 
         Consultant createdConsultant;
         try {
-            // save the User
+            // Save the Consultant
             createdConsultant = consultantRepo.save(consultant);
             System.out.println(createdConsultant);
-            // generate token for user
+            // Generate a token for the user
             final AuthenticationToken authenticationToken = new AuthenticationToken(createdConsultant);
-            // save token in database
+            // Save the token in the database
             authenticationService.saveConfirmationToken(authenticationToken);
-            // success in creating
+            // Success in creating
             return VarList.RSP_SUCCESS;
         } catch (Exception e) {
-            // handle signup error
+            // Handle signup error
             return VarList.RSP_ERROR;
         }
     }
@@ -165,5 +210,7 @@ public class ConsultantService {
             throw new EntityNotFoundException("Consultant not found for the given token: " + token);
         }
     }
+
+
 }
 

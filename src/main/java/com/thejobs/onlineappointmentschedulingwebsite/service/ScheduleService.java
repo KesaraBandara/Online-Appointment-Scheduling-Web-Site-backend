@@ -63,13 +63,7 @@ public class ScheduleService {
             return VarList.RSP_ERROR;
         }
     }
-//
-//    public List<ScheduleDTO> getAllScheduleByToken(String consultant) {
-//
-//        List<Schedule> scheduleList = scheduleRepo.getAllScheduleByConsultant(consultant);
-//        return modelMapper.map(scheduleList, new TypeToken<List<ScheduleDTO>>() {}.getType());
-//
-//    }
+
 
     public List<ScheduleSummaryDTO> getAllScheduleById(String consultantId) {
         Optional<Consultant> consultant = consultantRepo.findById(Long.valueOf(consultantId));
