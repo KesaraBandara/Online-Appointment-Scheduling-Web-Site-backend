@@ -274,6 +274,4 @@ public class ConsultantServiceTest {
         // Assert that an EntityNotFoundException is thrown
         assertThrows(EntityNotFoundException.class, () -> consultantService.getConsultantByToken(mockTokenValue));
     }
-
-
 }
